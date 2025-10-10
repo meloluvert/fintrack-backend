@@ -9,14 +9,15 @@ export function isAuthenticated(request:Request, response: Response, next: NextF
         return response.status(401).end({ message: 'Access Negado' });
     }
 
-    const [ , token] = authToken.split(" ")
+    const [ , token] = authToken.split(" "); 
+
 
     try {
-        const decoded = verify(token.split(' ')[1], process.env.JWT_SECRET as string) as Payload;
+        const decoded = verify(token, process.env.JWT_SECRET as string) as Payload;   
         request.user_id = decoded.sub;
         return next()
     } catch (error) {
-        response.status(400).json({ message: 'TOken Inválido, faça login novamente' });
+        response.status(400).json({ message: 'Token Inválido, faça login novamente' });
         
     }
 }
