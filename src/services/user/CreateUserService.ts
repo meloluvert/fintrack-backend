@@ -3,9 +3,6 @@ import bcrypt from "bcryptjs";
 import prismaClient from "../../prisma";
 import type { UserRequest } from "../../models/interfaces/user/UserRequest";
 
-
-
-
 export class CreateUserService {
   async execute({ name, email, password }: UserRequest) {
     const existingUser = await prismaClient.user.findUnique({ where: { email } });

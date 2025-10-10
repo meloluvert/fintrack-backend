@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { CreateCategoryService } from "../services/category/CreateCategoryService";
 import { EditCategoryService } from "../services/category/EditCategoryService";
 import { GetCategoriesByUserService } from "../services/category/GetCategoriesByUserService";
-
+import { RemoveCategoryService } from "../services/category/RemoveCategoryService";
 export class CategoryController {
   async store(req: Request, res: Response) {
     const createCategoryService = new CreateCategoryService();
@@ -27,8 +27,7 @@ export class CategoryController {
       const user_id = req.user_id;
 
       
-      const categories = getCategoriesByUserService.execute({user_id})
-
+      const categories = await getCategoriesByUserService.execute({user_id})                                                
       return res.json(categories);
     } catch (error: any) {
       return res.status(400).json({ error: error.message });
@@ -49,6 +48,19 @@ export class CategoryController {
       });
 
       return res.json(category);
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+  async destroy(req: Request, res: Response) {
+    try {
+      const user_id = req.user_id; // vem do middleware de autenticação
+      const { id} = req.params;
+
+      const removeCategoryService = new RemoveCategoryService();
+      const result = await removeCategoryService.execute({ user_id, id });
+
+      return res.status(200).json(result);
     } catch (error: any) {
       return res.status(400).json({ error: error.message });
     }
