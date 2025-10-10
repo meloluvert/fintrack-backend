@@ -14,5 +14,6 @@ router.post("/auth", new UserController().login)
 //Category
 router.post("/categories", isAuthenticated, new CategoryController().store)
 router.get("/categories", isAuthenticated, new CategoryController().index )
+router.put("/categories/:id", isAuthenticated, new CategoryController().update )
 
 export {router}

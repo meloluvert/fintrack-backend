@@ -13,7 +13,8 @@ class AuthUserService {
     if (!password) {
       throw new Error("Password must be passed");
     }
-    //ver noi BD se existe esse usuário
+    
+    //ver no BD se existe esse usuário
     const user = await prismaClient.user.findFirst({
       where: {
         email: email,
