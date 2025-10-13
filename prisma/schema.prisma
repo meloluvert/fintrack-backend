@@ -49,7 +49,7 @@ model Transaction {
   name        String?
   amount      Int
   type        TypeTransaction @default(INCOME)
-  image       String?
+  file_url    String?
 
   date       DateTime @default(now())
   created_at DateTime @default(now())

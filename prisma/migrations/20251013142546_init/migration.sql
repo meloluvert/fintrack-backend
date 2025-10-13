@@ -26,7 +26,7 @@ CREATE TABLE "transactions" (
     "name" TEXT,
     "amount" INTEGER NOT NULL,
     "type" TEXT NOT NULL DEFAULT 'INCOME',
-    "image" TEXT,
+    "file_url" TEXT,
     "date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,
