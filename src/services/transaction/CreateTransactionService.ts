@@ -1,6 +1,7 @@
 import prismaClient from "../../prisma";
 import type { CreateTransactionRequest } from "../../models/interfaces/transaction/CreateTransactionRequest";
 import { formatTransaction } from "../../utils/formatTransaction";
+import { GetCategoriesByUserService } from "../category/GetCategoriesByUserService";
 
 export class CreateTransactionService {
   async execute({
@@ -8,16 +9,27 @@ export class CreateTransactionService {
     category_id,
     name,
     amount,
+    date,
     type,
     file_url,
   }: CreateTransactionRequest) {
+    const getCategoriesByUserService =  new GetCategoriesByUserService()
     if (!user_id) {
       throw new Error("Usuário não identificado");
     }
 
-    if (!category_id) {
-      throw new Error("Categoria é obrigatória");
+    const category = await prismaClient.category.findFirst({
+      where: {
+        id: category_id,
+        user_id: user_id,
+      },
+    });
+    
+    if (!category) {
+      throw new Error("Categoria inválida ou não pertence ao usuário");
     }
+
+    
 
     if (!amount || isNaN(amount)) {
       throw new Error("Valor inválido");
@@ -35,6 +47,7 @@ export class CreateTransactionService {
         user_id,
         category_id,
         name,
+        date: new Date(date),
         amount,
         type: formattedType,
         file_url,

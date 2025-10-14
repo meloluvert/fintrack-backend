@@ -24,5 +24,8 @@ router.delete("/categories/:id", isAuthenticated, new CategoryController().destr
 //Transaction
 router.post("/transactions", upload.single("file"),isAuthenticated, new TransactionController().store)
 router.put("/transactions/:id", upload.single("file") ,isAuthenticated, new TransactionController().update )
+router.get("/transactions",isAuthenticated, new TransactionController().index)
+router.delete("/transactions/:id",isAuthenticated, new TransactionController().destroy)
+router.get("/transactions/:year/:month",isAuthenticated, new TransactionController().indexByMonth)
 
 export {router}
