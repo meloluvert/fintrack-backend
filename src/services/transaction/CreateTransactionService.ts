@@ -9,6 +9,7 @@ export class CreateTransactionService {
     category_id,
     name,
     amount,
+    date,
     type,
     file_url,
   }: CreateTransactionRequest) {
@@ -46,6 +47,7 @@ export class CreateTransactionService {
         user_id,
         category_id,
         name,
+        date: new Date(date),
         amount,
         type: formattedType,
         file_url,

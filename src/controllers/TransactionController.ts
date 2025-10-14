@@ -10,7 +10,7 @@ export class TransactionController {
 
     try {
       const user_id = req.user_id;
-      const { category_id, name, amount, type } = req.body;
+      const { category_id, name, amount, type , date} = req.body;
 
       const file_url = req.file ? req.file.filename : null;
       
@@ -18,6 +18,7 @@ export class TransactionController {
         user_id,
         category_id,
         name,
+        date, 
         amount: Number(amount)*100,
         type,
         file_url,
@@ -31,7 +32,7 @@ export class TransactionController {
 
   async update(req: Request, res: Response) {
     const { id } = req.params;
-    const { user_id, category_id, name, amount, type, file_url } = req.body;
+    const { user_id, category_id, name, amount, type, file_url, date } = req.body;
     const file = req.file; 
   
     const editTransactionService = new EditTransactionService();
@@ -41,6 +42,7 @@ export class TransactionController {
       user_id,
       category_id,
       name,
+      date,
       amount: Number(amount)*100,
       type,
       file_url,
