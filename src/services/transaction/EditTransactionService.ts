@@ -53,7 +53,7 @@ export class EditTransactionService {
         user_id,
         category_id,
         name,
-        amount: Number(amount)*100,
+        amount: amount,
         type: formattedType,
         file_url: newFileUrl,
       },

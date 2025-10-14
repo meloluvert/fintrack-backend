@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { CreateTransactionService } from "../services/transaction/CreateTransactionService";
 import { EditTransactionService } from "../services/transaction/EditTransactionService";
+import { GetTransactionsByUserService } from "../services/transaction/GetTransactionsByUserService";
+
+
 export class TransactionController {
   async store(req: Request, res: Response) {
     const createTransactionService = new CreateTransactionService();
@@ -38,7 +41,7 @@ export class TransactionController {
       user_id,
       category_id,
       name,
-      amount: Number(amount),
+      amount: Number(amount)*100,
       type,
       file_url,
       file,
@@ -46,5 +49,19 @@ export class TransactionController {
   
     return res.json(result);
   }
+
+  async index(req: Request, res: Response) {
+  
+      const getTransactionByUserService = new GetTransactionsByUserService();
+      try {
+        const user_id = req.user_id;
+  
+        
+        const transactions = await getTransactionByUserService.execute({user_id})                                                
+        return res.json(transactions);
+      } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+      }
+    }
   
 }
