@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { formatTransaction } from "../../utils/formatTransaction";
 import prismaClient from "../../prisma";
-
+import type { EditTransactionRequest } from "../../models/interfaces/transaction/EditTransactionRequest";
 export class EditTransactionService {
   async execute({
     id,
@@ -64,4 +64,5 @@ export class EditTransactionService {
 
     return formatTransaction(updatedTransaction);
   }
+  
 }
