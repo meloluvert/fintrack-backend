@@ -1,5 +1,5 @@
 import userDocs from "./user.json";
-
+import otherRoutesDocs from "./other-routes.json"
 export const swaggerDocs = {
   openapi: "3.0.0",
   info: {
@@ -15,6 +15,7 @@ export const swaggerDocs = {
   ],
   paths: {
     ...userDocs.paths,
+    ...otherRoutesDocs.paths
   },
   components: {
     schemas: {

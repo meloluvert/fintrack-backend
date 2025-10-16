@@ -1,0 +1,60 @@
+{
+    "paths": {
+      "/test": {
+        "get": {
+          "tags": ["Other Routes"],
+          "summary": "Testar conexão com o servidor",
+          "description": "Retorna um JSON simples para verificar se o servidor está online e respondendo corretamente.",
+          "responses": {
+            "200": {
+              "description": "Servidor ativo",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "ok": {
+                        "type": "boolean",
+                        "example": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/files/{file_url}": {
+        "get": {
+          "tags": ["Other Routes"],
+          "summary": "Obter arquivo enviado",
+          "description": "Retorna um arquivo estático armazenado na pasta **uploads**. Ideal para acessar comprovantes ou anexos de transações.",
+          "parameters": [
+            {
+              "name": "file_url",
+              "in": "path",
+              "required": true,
+              "description": "Nome do arquivo a ser recuperado",
+              "schema": {
+                "type": "string",
+                "example": "comprovante-2025.png"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Arquivo retornado com sucesso",
+              "content": {
+                "application/octet-stream": {}
+              }
+            },
+            "404": {
+              "description": "Arquivo não encontrado"
+            }
+          }
+        }
+      }
+    }
+  }
+  
