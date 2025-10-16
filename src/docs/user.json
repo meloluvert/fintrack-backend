@@ -1,0 +1,140 @@
+{
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Criar novo usuário",
+        "description": "Cria um novo usuário no sistema.",
+        "requestBody": {
+          "description": "Dados necessários para criar um novo usuário",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCreateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseCreateUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro ao criar usuário"
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Autenticar usuário",
+        "description": "Realiza login e retorna o token JWT.",
+        "requestBody": {
+          "description": "Credenciais de login",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login bem-sucedido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseLoginUser"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RequestCreateUser": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "example": "João" },
+          "email": { "type": "string", "example": "joao@email.com" },
+          "password": { "type": "string", "example": "SenhaSuperSegura" }
+        },
+        "required": ["name", "email", "password"]
+      },
+      "ResponseCreateUser": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "3092bfa2-b791-48fd-8b11-3b5270e36a4a"
+              },
+              "name": { "type": "string", "example": "João Melo" },
+              "email": { "type": "string", "example": "joao@email.com" },
+              "password": {
+                "type": "string",
+                "example": "$2b$08$34BlDjT271.qksdUsWcer.3E028ALkOlvUJ2r4T.7xvE9mjDRu12O"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-10-16T19:40:03.894Z"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-10-16T19:40:03.894Z"
+              }
+            }
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "example": "joao@email.com" },
+          "password": { "type": "string", "example": "SenhaSuperSegura" }
+        },
+        "required": ["email", "password"]
+      },
+      "ResponseLoginUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "3092bfa2-b791-48fd-8b11-3b5270e36a4a"
+          },
+          "name": { "type": "string", "example": "João Melo" },
+          "email": { "type": "string", "example": "joao@gmail.com" },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        }
+      }
+    }
+  }
+}

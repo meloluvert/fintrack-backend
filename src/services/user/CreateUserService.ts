@@ -10,7 +10,7 @@ export class CreateUserService {
       throw new Error("Email já cadastrado");
     }
 
-    const hashedPassword = await bcrypt.hash(password, 8);
+      const hashedPassword = await bcrypt.hash(password, 8);
 
     const user = await prismaClient.user.create({
       data: { name, email, password: hashedPassword },

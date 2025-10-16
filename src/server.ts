@@ -2,16 +2,17 @@ import express, { Request, Response, NextFunction } from "express";
 import { router } from "./routes";
 import swaggerUi from "swagger-ui-express";
 import { resolve } from "path";
-// import swaggerDocument from "../swagger.json";
-// import path from "path";
 import cors from "cors";
+import { swaggerDocs } from "./docs";
+
+
 const app = express();
 
 const port = 3333;
 app.use(express.json());
 app.use(cors());
 app.use(router);
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use("/files", express.static(resolve(__dirname, "..", "uploads")));
 
 app.use(
@@ -34,5 +35,6 @@ app.get("/terms", (request: Request, response: Response) => {
   });
 });
 app.listen(port, () => {
-  console.log("Servidor rodando na porta 3333");
+  console.log("Servidor rodando na porta", port);
+  console.log("Para utilizar, use a documentação: http://localhost:"+port+"/api-docs")
 });
