@@ -2,7 +2,8 @@ import prismaClient from "../../prisma";
 import type { CreateTransactionRequest } from "../../models/interfaces/transaction/CreateTransactionRequest";
 import { formatTransaction } from "../../utils/formatTransaction";
 import { GetCategoriesByUserService } from "../category/GetCategoriesByUserService";
-
+import { UpdateMonthlyReportService } from "../monthly_reports/UpdateMonthlyReportService";
+import { getBrazilMonthYear } from "../../utils/date";
 export class CreateTransactionService {
   async execute({
     user_id,
@@ -56,7 +57,11 @@ export class CreateTransactionService {
         category:true,
       }
     });
+    
+    const { month, year } = getBrazilMonthYear(new Date(date));
 
+    const updateMonthlyReportService = new UpdateMonthlyReportService();
+    const updatedReport = await updateMonthlyReportService.execute({ user_id, month, year });
     return formatTransaction(transaction) ;
   }
 }

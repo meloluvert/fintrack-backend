@@ -54,7 +54,7 @@ export class CategoryController {
   }
   async destroy(req: Request, res: Response) {
     try {
-      const user_id = req.user_id; // vem do middleware de autenticação
+      const user_id = req.user_id;
       const { id} = req.params;
 
       const removeCategoryService = new RemoveCategoryService();

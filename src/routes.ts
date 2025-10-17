@@ -2,7 +2,10 @@ import { Router, Request, Response } from "express";
 import { UserController } from "./controllers/UserController";
 import { CategoryController } from "./controllers/CategoryController";
 import { isAuthenticated } from "./middlewares/isAuthenticated";
+import { CheckFileByUserService } from "./services/file/CheckRelationFileUserService";
 import multer from 'multer';
+import path, {resolve} from "path";
+import fs from "fs";
 import uploadConfig from "./config/multer";
 import { TransactionController } from "./controllers/TransactionController";
  const router = Router();
@@ -28,4 +31,24 @@ router.get("/transactions",isAuthenticated, new TransactionController().index)
 router.delete("/transactions/:id",isAuthenticated, new TransactionController().destroy)
 router.get("/transactions/:year/:month",isAuthenticated, new TransactionController().indexByMonth)
 
-export {router}
+router.get("/files/:filename", isAuthenticated, async (req, res) => {
+  const { filename } = req.params;
+  const user_id = req.user_id;
+
+  try {
+    const checkFileByUserService = new CheckFileByUserService();
+    await checkFileByUserService.execute({ user_id, file_url: filename });
+
+    const filePath = resolve("uploads", filename);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: "Arquivo não encontrado" });
+    }
+
+    res.sendFile(filePath);
+  } catch (error: any) {
+    return res.status(403).json({ error: error.message });
+  }
+});
+
+export { router };

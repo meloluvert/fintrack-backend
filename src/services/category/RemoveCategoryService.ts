@@ -15,6 +15,12 @@ export class RemoveCategoryService {
 
     const category_deleted = await prismaClient.category.delete({
       where: { id: id },
+      select:{
+        id: true,
+        name: true,
+        created_at: true, 
+        updated_at:true
+      }
     });
 
     return category_deleted;

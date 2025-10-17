@@ -6,18 +6,17 @@ export function isAuthenticated(request:Request, response: Response, next: NextF
 
     const authToken =  request.headers.authorization;
     if(!authToken){
-        return response.status(401).end({ message: 'Access Negado' });
+        return response.status(401).json({ message: 'Accesso Negado, tente logar novamente' });
     }
 
     const [ , token] = authToken.split(" "); 
-
 
     try {
         const decoded = verify(token, process.env.JWT_SECRET as string) as Payload;   
         request.user_id = decoded.sub;
         return next()
     } catch (error) {
-        response.status(400).json({ message: 'Token Inválido, faça login novamente' });
+        return response.status(400).json({ message: 'Token Inválido, faça login novamente' });
         
     }
 }
