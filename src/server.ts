@@ -6,6 +6,7 @@ import cors from "cors";
 import os from "os"
 import { swaggerDocs } from "./docs";
 
+import path from "path";
 
 const app = express();
 
@@ -30,6 +31,7 @@ const localIP = getLocalIP();
 const port = 3333;
 app.use(express.json());
 app.use(cors());
+
 app.use("/v1",router);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
@@ -37,7 +39,8 @@ router.get("/test", (request: Request, response: Response) => {
   return response.json({ ok: true });
 });
 
-  app.use("/files", express.static(resolve(__dirname, "..", "uploads")));
+
+
 
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {

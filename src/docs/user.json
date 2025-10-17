@@ -2,7 +2,7 @@
   "paths": {
     "/users": {
       "post": {
-        "tags": ["User"],
+        "tags": ["Usuários"],
         "summary": "Criar novo usuário",
         "description": "Cria um novo usuário no sistema.",
         "requestBody": {
@@ -35,7 +35,7 @@
     },
     "/auth": {
       "post": {
-        "tags": ["User"],
+        "tags": ["Usuários"],
         "summary": "Autenticar usuário",
         "description": "Realiza login e retorna o token JWT.",
         "requestBody": {

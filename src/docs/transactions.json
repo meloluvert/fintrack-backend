@@ -1,0 +1,108 @@
+{
+  "paths": {
+    "/transactions": {
+      "post": {
+        "tags": ["Transações"],
+        "summary": "Criar uma nova transação",
+        "description": "Cria uma nova transação para o usuário autenticado. Pode incluir um arquivo (imagem ou PDF). É importtante que o tipo da transação seja 'income' (receita) ou 'expense'(despesa), minúsculo, pois o banco de dados só aceita esses dois tipos",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category_id": {
+                    "type": "string",
+                    "description": "ID da categoria"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Nome da transação"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Valor da transação (ex: 789.90)"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["income", "expense"],
+                    "description": "Tipo da transação"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data da transação"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Arquivo anexado à transação"
+                  }
+                },
+                "required": ["category_id", "amount", "type"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transação criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseCreateTransaction"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro ao criar transação"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ResponseCreateTransaction": {
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "user_id": { "type": "string" },
+    "name": { "type": "string" },
+    "amount": { "type": "number", "format": "float" },
+    "type": { "type": "string", "enum": ["income", "expense"] },
+    "date": { "type": "string", "format": "date-time" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "category": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "user_id": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "file": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" },
+        "name": { "type": "string" }
+      },
+      "nullable": true
+    }
+  }
+}
+
+    }
+  }
+}

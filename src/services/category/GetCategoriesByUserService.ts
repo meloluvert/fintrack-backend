@@ -9,6 +9,12 @@ export class GetCategoriesByUserService {
       const categories = await prismaClient.category.findMany({
         where: { user_id },
         orderBy: { created_at: "desc" },
+        select:{
+          id:true,
+          name: true,
+          created_at:true,
+          updated_at:true
+        }
       });
       return categories
   }

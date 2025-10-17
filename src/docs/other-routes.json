@@ -2,7 +2,7 @@
     "paths": {
       "/test": {
         "get": {
-          "tags": ["Other Routes"],
+          "tags": ["Outras Rotas"],
           "summary": "Testar conexão com o servidor",
           "description": "Retorna um JSON simples para verificar se o servidor está online e respondendo corretamente.",
           "responses": {
@@ -27,7 +27,7 @@
       },
       "/files/{file_url}": {
         "get": {
-          "tags": ["Other Routes"],
+          "tags": ["Outras Rotas"],
           "summary": "Obter arquivo enviado",
           "description": "Retorna um arquivo estático armazenado na pasta **uploads**. Ideal para acessar comprovantes ou anexos de transações.",
           "parameters": [
@@ -52,7 +52,12 @@
             "404": {
               "description": "Arquivo não encontrado"
             }
+          },
+          "security": [
+          {
+            "bearerAuth": []
           }
+        ]
         }
       }
     }
