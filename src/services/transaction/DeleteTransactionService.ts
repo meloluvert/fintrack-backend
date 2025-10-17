@@ -3,6 +3,8 @@ import path from "path";
 import prismaClient from "../../prisma";
 import { formatTransaction } from "../../utils/formatTransaction";
 import { DeleteTransactionRequest } from "../../models/interfaces/transaction/DeleteTransactionRequest";
+import { getBrazilMonthYear } from "../../utils/date";
+import { UpdateMonthlyReportService } from "../monthly_reports/UpdateMonthlyReportService";
 export class DeleteTransactionService {
   async execute({ id, user_id }: DeleteTransactionRequest) {
     const transaction = await prismaClient.transaction.findUnique({
@@ -28,6 +30,12 @@ export class DeleteTransactionService {
       where: { id },
       include: { category: true },
     });
+
+
+    const { month, year } = getBrazilMonthYear(new Date(deletedTransaction.date));
+    
+        const updateMonthlyReportService = new UpdateMonthlyReportService();
+        await updateMonthlyReportService.execute({ user_id, month, year });
 
     return formatTransaction(deletedTransaction);
   }

@@ -31,7 +31,6 @@ router.get("/transactions",isAuthenticated, new TransactionController().index)
 router.delete("/transactions/:id",isAuthenticated, new TransactionController().destroy)
 router.get("/transactions/:year/:month",isAuthenticated, new TransactionController().indexByMonth)
 
-
 router.get("/files/:filename", isAuthenticated, async (req, res) => {
   const { filename } = req.params;
   const user_id = req.user_id;

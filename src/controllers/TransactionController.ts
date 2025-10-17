@@ -32,9 +32,10 @@ export class TransactionController {
 
   async update(req: Request, res: Response) {
     const { id } = req.params;
-    const { user_id, category_id, name, amount, type, file_url, date } =
+    const { category_id, name, amount, type, file_url, date } =
       req.body;
     const file = req.file;
+    const user_id = req.user_id;
 
     const editTransactionService = new EditTransactionService();
 

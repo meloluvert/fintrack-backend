@@ -3,6 +3,8 @@ import path from "path";
 import { formatTransaction } from "../../utils/formatTransaction";
 import prismaClient from "../../prisma";
 import type { EditTransactionRequest } from "../../models/interfaces/transaction/EditTransactionRequest";
+import { UpdateMonthlyReportService } from "../monthly_reports/UpdateMonthlyReportService";
+import { getBrazilMonthYear } from "../../utils/date";
 export class EditTransactionService {
   async execute({
     id,
@@ -24,7 +26,6 @@ export class EditTransactionService {
     }
 
     let newFileUrl = transaction.file_url;
-
     if (file) {
       if (transaction.file_url !== file.filename) {
         if (transaction.file_url) {
@@ -60,6 +61,24 @@ export class EditTransactionService {
       include: {
         category: true,
       },
+    });
+
+
+    //relatorios mensais...
+    const updateMonthlyReportService = new UpdateMonthlyReportService();
+
+    const { month: oldMonth, year: oldYear } = getBrazilMonthYear(new Date(transaction.date));
+    await updateMonthlyReportService.execute({
+      user_id,
+      month: oldMonth,
+      year: oldYear,
+    });
+
+    const { month: newMonth, year: newYear } = getBrazilMonthYear(new Date(date));
+    await updateMonthlyReportService.execute({
+      user_id,
+      month: newMonth,
+      year: newYear,
     });
 
     return formatTransaction(updatedTransaction);

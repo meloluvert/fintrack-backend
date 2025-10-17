@@ -4,7 +4,8 @@
       "post": {
         "tags": ["Transações"],
         "summary": "Criar uma nova transação",
-        "description": "Cria uma nova transação para o usuário autenticado. Pode incluir um arquivo (imagem ou PDF). É importtante que o tipo da transação seja 'income' (receita) ou 'expense'(despesa), minúsculo, pois o banco de dados só aceita esses dois tipos",
+        "description": "Cria uma nova transação para o usuário autenticado. Pode incluir um arquivo (imagem ou PDF). É importante que o tipo da transação seja 'income' (receita) ou 'expense' (despesa), minúsculo, pois o banco de dados só aceita esses dois tipos. Se a hora da transação não importa, é importante que seja registrada corretamente: se colocar meia-noite como horário padrão, a consulta mensal pode dar resultados incorretos, pois o cálculo do mês leva em conta o horário UTC do Brasil no range de pesquisa, não somente as datas. Se possível, use a hora de meio-dia como padrão. Assim, a diferença de 3 horas não interferirá nas consultas.",
+
         "security": [
           {
             "bearerAuth": []
@@ -15,41 +16,11 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "category_id": {
-                    "type": "string",
-                    "description": "ID da categoria"
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "Nome da transação"
-                  },
-                  "amount": {
-                    "type": "number",
-                    "format": "float",
-                    "description": "Valor da transação (ex: 789.90)"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": ["income", "expense"],
-                    "description": "Tipo da transação"
-                  },
-                  "date": {
-                    "type": "string",
-                    "format": "date-time",
-                    "description": "Data da transação"
-                  },
-                  "file": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Arquivo anexado à transação"
-                  }
-                },
-                "required": ["category_id", "amount", "type"]
+                "$ref": "#/components/schemas/RequestCreateTransaction"
               }
             }
           }
+         
         },
         "responses": {
           "201": {
@@ -66,43 +37,301 @@
             "description": "Erro ao criar transação"
           }
         }
+      },
+      "get": {
+    "tags": ["Transações"],
+    "summary": "Listar todas as transações do usuário",
+    "description": "Retorna todas as transações do usuário autenticado. Não é necessário nenhum parâmetro além do token Bearer.",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Lista de transações",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/ResponseCreateTransaction" }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Token inválido ou não enviado"
       }
     }
-  },
-  "components": {
-    "schemas": {
-      "ResponseCreateTransaction": {
-  "type": "object",
-  "properties": {
-    "id": { "type": "string" },
-    "user_id": { "type": "string" },
-    "name": { "type": "string" },
-    "amount": { "type": "number", "format": "float" },
-    "type": { "type": "string", "enum": ["income", "expense"] },
-    "date": { "type": "string", "format": "date-time" },
-    "created_at": { "type": "string", "format": "date-time" },
-    "updated_at": { "type": "string", "format": "date-time" },
-    "category": {
-      "type": "object",
-      "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
-        "user_id": { "type": "string" },
-        "created_at": { "type": "string", "format": "date-time" },
-        "updated_at": { "type": "string", "format": "date-time" }
-      }
+  }
     },
-    "file": {
-      "type": "object",
-      "properties": {
-        "url": { "type": "string" },
-        "name": { "type": "string" }
+    "/transactions/{id}": {
+      "put": {
+        "tags": ["Transações"],
+        "summary": "Editar uma transação existente",
+        "description": "Edita todos os dados de uma transação. Se `file` for enviado via multipart, substitui o arquivo antigo. Se `file_url` for igual ao atual, mantém o arquivo. Requer token Bearer.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID da transação a ser editada",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestEditTransaction"
+              },
+              "encoding": {
+                "file": {
+                  "contentType": ["image/png", "image/jpeg", "application/pdf"]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transação atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseEditTransaction"
+                }
+              }
+            }
+          },
+          "400": { "description": "Erro de validação ou dados inválidos" },
+          "401": { "description": "Token inválido ou não enviado" },
+          "404": { "description": "Transação não encontrada" }
+        }
       },
-      "nullable": true
+      "delete": {
+    "tags": ["Transações"],
+    "summary": "Excluir uma transação",
+    "description": "Exclui uma transação existente do usuário autenticado. Remove também o arquivo associado, caso exista.",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID da transação a ser excluída",
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Transação excluída com sucesso",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ResponseCreateTransaction" }
+          }
+        }
+      },
+      "400": {
+        "description": "Erro ao tentar excluir a transação"
+      },
+      "401": {
+        "description": "Token inválido ou não enviado"
+      },
+      "404": {
+        "description": "Transação não encontrada"
+      }
+    }
+  }
+    },
+    "/transactions/{year}/{month}": {
+  "get": {
+    "tags": ["Transações"],
+    "summary": "Listar transações por mês e ano",
+    "description": "Retorna todas as transações do usuário autenticado referentes a um determinado mês e ano. Também retorna o relatório mensal (`monthly_report`) com os totais de receitas e despesas. É necessário enviar o token Bearer. O mês deve ser informado no formato numérico (1–12) ou em texto (ex: 'september').",
+    "security": [
+      { "bearerAuth": [] }
+    ],
+    "parameters": [
+      {
+        "name": "year",
+        "in": "path",
+        "required": true,
+        "description": "Ano da consulta (ex: 2025)",
+        "schema": { "type": "integer", "example": 2025 }
+      },
+      {
+        "name": "month",
+        "in": "path",
+        "required": true,
+        "description": "Mês da consulta (ex: 9), vai de 1-12",
+        "schema": { "type": "integer", "example": "9" }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Transações e relatório mensal retornados com sucesso",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "transactions": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ResponseCreateTransaction" }
+                },
+                "monthly_report": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string", "example": "f0ebf51e-b168-4d41-bce1-945f1794b3a8" },
+                    "month": { "type": "string", "example": "SEPTEMBER" },
+                    "year": { "type": "integer", "example": 2025 },
+                    "total_income": { "type": "number", "format": "float", "example": 100.23 },
+                    "total_expense": { "type": "number", "format": "float", "example": 2400.92 },
+                    "user_id": { "type": "string", "example": "07c7190d-5655-4de6-a9fb-48178b2aa712" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Parâmetros inválidos (ano ou mês incorretos)"
+      },
+      "401": {
+        "description": "Token inválido ou não enviado"
+      }
     }
   }
 }
-
+  },
+  "components": {
+    "schemas": {
+      "RequestCreateTransaction": {
+        "type": "object",
+        "properties": {
+          "category_id": {
+            "type": "string",
+            "description": "ID da categoria"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome da transação"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor da transação (ex: 789.90)"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["income", "expense"],
+            "description": "Tipo da transação"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data da transação"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Arquivo anexado à transação"
+          }
+        },
+        "required": ["category_id", "amount", "type"]
+      },
+      "ResponseCreateTransaction": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "user_id": { "type": "string" },
+          "name": { "type": "string" },
+          "amount": { "type": "number", "format": "float", "default": 126.12 },
+          "type": { "type": "string", "enum": ["income", "expense"] },
+          "date": { "type": "string", "format": "date-time" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "category": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "user_id": { "type": "string" },
+              "created_at": { "type": "string", "format": "date-time" },
+              "updated_at": { "type": "string", "format": "date-time" }
+            }
+          },
+          "file": {
+            "type": "object",
+            "properties": {
+              "url": { "type": "string" },
+              "name": { "type": "string" }
+            },
+            "nullable": true
+          }
+        }
+      },
+      "RequestEditTransaction": {
+        "type": "object",
+        "properties": {
+          "category_id": { "type": "string" },
+          "name": { "type": "string" },
+          "amount": { "type": "number", "format": "float" },
+          "type": { "type": "string", "enum": ["income", "expense"] },
+          "date": { "type": "string", "format": "date-time" },
+          "file_url": { "type": "string", "nullable": true },
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Arquivo anexado à transação",
+            "nullable":true
+          }
+        },
+        "required": ["category_id", "name", "amount", "type", "date"]
+      },
+      "ResponseEditTransaction": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "user_id": { "type": "string" },
+          "name": { "type": "string" },
+          "amount": { "type": "number", "format": "float" },
+          "type": { "type": "string", "enum": ["income", "expense"] },
+          "date": { "type": "string", "format": "date-time" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "category": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "user_id": { "type": "string" },
+              "created_at": { "type": "string", "format": "date-time" },
+              "updated_at": { "type": "string", "format": "date-time" }
+            }
+          },
+          "file": {
+            "type": "object",
+            "properties": {
+              "url": { "type": "string" },
+              "name": { "type": "string" }
+            },
+            "nullable": true
+          }
+        }
+      }
     }
   }
 }
