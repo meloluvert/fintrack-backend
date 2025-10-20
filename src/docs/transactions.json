@@ -229,6 +229,10 @@
             "type": "string",
             "description": "Nome da transação"
           },
+          "": {
+            "type": "string",
+            "description": "Descrição da transação"
+          },
           "amount": {
             "type": "number",
             "format": "float",
@@ -263,6 +267,7 @@
           "date": { "type": "string", "format": "date-time" },
           "created_at": { "type": "string", "format": "date-time" },
           "updated_at": { "type": "string", "format": "date-time" },
+          "description":{ "type": "string" },
           "category": {
             "type": "object",
             "properties": {
@@ -292,6 +297,7 @@
           "type": { "type": "string", "enum": ["income", "expense"] },
           "date": { "type": "string", "format": "date-time" },
           "file_url": { "type": "string", "nullable": true },
+          "description":{ "type": "string", "nullable": true },
           "file": {
             "type": "string",
             "format": "binary",
@@ -312,6 +318,7 @@
           "date": { "type": "string", "format": "date-time" },
           "created_at": { "type": "string", "format": "date-time" },
           "updated_at": { "type": "string", "format": "date-time" },
+          "description":{ "type": "string" },
           "category": {
             "type": "object",
             "properties": {

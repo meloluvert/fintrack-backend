@@ -3,6 +3,7 @@ export interface EditTransactionRequest {
   category_id: string;
   name?: string;
   date: string;
+  description:string;
   amount: number;
   type: "income" | "expense";
   file_url?: string | null; 

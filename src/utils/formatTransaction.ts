@@ -2,26 +2,42 @@
 export interface TransactionInput {
   id: string;
   user_id: string;
-  category_id: string;
+  category_id?: string;
   name?: string | null;
   amount: number;
   type: "INCOME" | "EXPENSE";
   file_url?: string | null;
   date: Date;
+  description?: string | null;
   created_at: Date;
   updated_at: Date;
+  category?: {
+    id: string;
+    user_id: string;
+    name: string;
+    created_at: Date;
+    updated_at: Date;
+};
 }
 
 export interface TransactionOutput {
   id: string;
   user_id: string;
   name?: string | null;
+  description?: string | null;
   amount: number;
   type: "income" | "expense";
   file: { url: string; name: string } | null;
   date: Date;
   created_at: Date;
   updated_at: Date;
+  category?: {
+    id: string;
+    user_id: string;
+    name: string;
+    created_at: Date;
+    updated_at: Date;
+};
 }
 
 export function formatTransaction(transaction: TransactionInput): TransactionOutput {

@@ -12,6 +12,7 @@ export class EditTransactionService {
     category_id,
     name,
     date,
+    description,
     amount,
     type,
     file_url,
@@ -52,6 +53,7 @@ export class EditTransactionService {
       data: {
         user_id,
         category_id,
+        description,
         name,
         date: new Date(date),
         amount: amount,

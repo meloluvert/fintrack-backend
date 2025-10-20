@@ -24,6 +24,7 @@ CREATE TABLE "transactions" (
     "user_id" TEXT NOT NULL,
     "category_id" TEXT NOT NULL,
     "name" TEXT,
+    "description" TEXT,
     "amount" INTEGER NOT NULL,
     "type" TEXT NOT NULL DEFAULT 'INCOME',
     "file_url" TEXT,
