@@ -143,3 +143,6 @@ backend/
 └── README.md
 ```
 
+## 🧩 Repositórios Relacionados
+
+- 📦 **Mobile:** [FinTrack Mobile](https://github.com/brenopz07/FinTrack)
