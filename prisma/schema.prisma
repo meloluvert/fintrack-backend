@@ -6,8 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../src/prisma/generated"
-
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -18,7 +17,7 @@ datasource db {
 model User {
   id         String   @id @default(uuid())
   name       String
-  email      String
+  email      String   @unique
   password   String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -48,9 +47,10 @@ model Transaction {
   user_id     String
   category_id String
   name        String?
+  description String?
   amount      Int
   type        TypeTransaction @default(INCOME)
-  image       String?
+  file_url    String?
 
   date       DateTime @default(now())
   created_at DateTime @default(now())

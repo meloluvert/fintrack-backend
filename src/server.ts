@@ -1,17 +1,46 @@
 import express, { Request, Response, NextFunction } from "express";
-// import { router } from "./routes";
+import { router } from "./routes";
 import swaggerUi from "swagger-ui-express";
-// import swaggerDocument from "../swagger.json";
-// import path from "path";
+import { resolve } from "path";
 import cors from "cors";
+import os from "os"
+import { swaggerDocs } from "./docs";
+
+import path from "path";
+
 const app = express();
+
+
+//para ajudar o front a testar na mesma rede
+
+
+function getLocalIP() {
+  const interfaces = os.networkInterfaces();
+
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name] as any) {
+      if (iface.family === "IPv4" && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+  return "IP não encontrado";
+}
+const localIP = getLocalIP();
 
 const port = 3333;
 app.use(express.json());
 app.use(cors());
-// app.use("/v1", router);
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// app.use("/files", express.static(path.resolve(__dirname, "..", "tmp")));
+
+app.use("/v1",router);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+router.get("/test", (request: Request, response: Response) => {
+  return response.json({ ok: true });
+});
+
+
+
 
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {
@@ -33,5 +62,9 @@ app.get("/terms", (request: Request, response: Response) => {
   });
 });
 app.listen(port, () => {
-  console.log("Servidor rodando na porta 3333");
+  console.log("Bem vindo a API do FinTrack")
+  console.log("Servidor rodando na porta", port);
+  console.log("Para utilizar, use a documentação: http://localhost:"+port+"/api-docs")
+  console.log(`- Localmente:  http://localhost:${port}`);
+  console.log(`- Rede:  http://${localIP}:${port}`);
 });
