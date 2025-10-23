@@ -31,6 +31,44 @@
             "description": "Erro ao criar usuário"
           }
         }
+      },
+      "put": {
+        "tags": ["Usuários"],
+        "summary": "Atualizar nome do usuário",
+        "description": "Permite ao usuário autenticado atualizar o próprio nome. É necessário enviar o token JWT no cabeçalho Authorization.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro na requisição (ex: nome inválido ou usuário não encontrado)"
+          },
+          "401": {
+            "description": "Usuário não autenticado ou token inválido"
+          }
+        }
       }
     },
     "/auth": {
@@ -120,6 +158,43 @@
         },
         "required": ["email", "password"]
       },
+      "UserUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "João Vitor"
+          }
+        },
+        "required": ["name"]
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "07c7190d-5655-4de6-a9fb-48178b2aa712"
+          },
+          "name": {
+            "type": "string",
+            "example": "Joao Vitor"
+          },
+          "email": {
+            "type": "string",
+            "example": "joao@email.com"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-10-20T14:31:04.000Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-10-20T18:42:15.000Z"
+          }
+        }},
       "ResponseLoginUser": {
         "type": "object",
         "properties": {

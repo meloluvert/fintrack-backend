@@ -2,6 +2,7 @@ import type { UserRequest } from "../models/interfaces/user/UserRequest";
 import { Request, Response } from "express";
 import { AuthUserService } from "../services/user/AuthUserService";
 import { CreateUserService } from "../services/user/CreateUserService";
+import { EditUserService } from "../services/user/EditUserService";
 
 export class UserController {
   async store(req: Request, res: Response) {
@@ -29,4 +30,21 @@ export class UserController {
       return res.status(401).json({ error: err.message });
     }
   }
+
+  async update(req: Request, res: Response) {
+      const editUserService = new EditUserService();
+      try {
+        const user_id = req.user_id;
+        const { name } = req.body;
+  
+        const user = await editUserService.execute({
+          user_id,
+          name,
+        });
+  
+        return res.json(user);
+      } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+      }
+    }
 }

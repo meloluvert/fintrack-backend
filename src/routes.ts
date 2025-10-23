@@ -16,6 +16,7 @@ router.get("/test", (request: Request, response: Response) => {
 
 //User
 router.post("/users", new UserController().store)
+router.put("/users", isAuthenticated, new UserController().update);
 router.post("/auth", new UserController().login)
 
 //Category
