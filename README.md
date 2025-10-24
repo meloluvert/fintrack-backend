@@ -22,15 +22,8 @@ A API foi desenvolvida em **Node.js + Express + Prisma**, utilizando **JWT** par
 Clone o repositório e acesse a pasta do backend:
 
 ```bash
-git clone https://github.com/seu-usuario/FinTrack.git
-cd FinTrack/backend
-```
-
-Para usar a versão de desenvolvimento, use o git para trocar para a branch develop
-```bash
-git branch develop
-git switch develop
-git pull origin develop
+git clone https://github.com/meloluvert/fintrack-backend.git
+cd fintrack-backend/
 ```
 
 Instale as dependências:
