@@ -71,15 +71,8 @@ npx prisma studio
 
 ## ▶️ Execução
 
-### Ambiente de desenvolvimento:
 ```bash
 npm run dev
-```
-
-### Ambiente de produção:
-```bash
-npm run build
-npm start
 ```
 
 A API rodará em:  
