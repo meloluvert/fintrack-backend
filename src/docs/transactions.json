@@ -229,7 +229,7 @@
             "type": "string",
             "description": "Nome da transação"
           },
-          "": {
+          "description": {
             "type": "string",
             "description": "Descrição da transação"
           },
